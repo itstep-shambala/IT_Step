@@ -19,10 +19,9 @@ namespace IT_STEP
         {
             try
             {
-                using (StreamWriter file = new StreamWriter(path, false))
-                {
-                    file.WriteLine($"{student.FirstName};{student.LastName};{student.DateOfBirth.ToString("G")};{student.Faculty};{student.NumberOfGroup};{student.AverageMark}");
-                }
+                using var file = new StreamWriter(path, false);
+                file.WriteLine(
+                    $"{student.FirstName};{student.LastName};{student.DateOfBirth:G};{student.Faculty};{student.NumberOfGroup};{student.AverageMark}");
             }
             catch (UnauthorizedAccessException)
             {
@@ -39,14 +38,16 @@ namespace IT_STEP
             }
             catch (IOException)
             {
-                Console.WriteLine("Параметр path включает неверный или недопустимый синтаксис имени файла, имени каталога или метки тома");
+                Console.WriteLine(
+                    "Параметр path включает неверный или недопустимый синтаксис имени файла, имени каталога или метки тома");
             }
         }
-        static void Main(string[] args)
+
+        static void Main()
         {
-            Student student = new Student("Andrey", "Starinin", DateTime.Now, "SD", 1, 2);
+            var student = new Student("Andrey", "Starinin", DateTime.Now, "SD", 1, 2);
             ShowMenu();
-            char choice = Convert.ToChar(Console.ReadLine());
+            var choice = Convert.ToChar(Console.ReadLine());
             switch (choice)
             {
                 case '1':
@@ -59,10 +60,8 @@ namespace IT_STEP
                     break;
                 case '5':
                     Console.Write("Введите имя файла: ");
-                    string path = Console.ReadLine();
+                    var path = Console.ReadLine();
                     ExportToFile(student, path);
-                    break;
-                default:
                     break;
             }
         }
