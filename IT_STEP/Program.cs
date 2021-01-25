@@ -97,6 +97,52 @@ namespace IT_STEP
             }
         }
 
+        static void ImportFromFile(ref List<Student> students, string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                path = "import.csv";
+            }
+
+            string str;
+            try
+            {
+                using (var file = new StreamReader(path))
+                {
+                    while ((str = file.ReadLine()) != null)
+                    {
+                        var temp = str.Split(';');
+                        var firstName = temp[0];
+                        var lastName = temp[1];
+                        var dateOfBirth = Convert.ToDateTime(temp[2]);
+                        var faculty = temp[3];
+                        var numberOfGroup = Convert.ToInt32(temp[4]);
+                        var averageMark = Convert.ToDouble(temp[5]);
+
+                        var student = new Student(firstName, lastName, dateOfBirth, faculty, numberOfGroup,
+                            averageMark);
+                        students.Add(student);
+                    }
+                }
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Путь является пустой строкой.");
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("Файл не найден.");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                Console.WriteLine("Указан недопустимый путь (например, он ведет на несопоставленный диск).");
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Путь содержит неправильный или недопустимый синтаксис имени файла, имени каталога или метки тома.");
+            }
+        }
+
         static void Main()
         {
             var student = new Student("Andrey", "Starinin", DateTime.Now, "SD", 1, 2);
