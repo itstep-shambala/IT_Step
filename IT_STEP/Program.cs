@@ -16,31 +16,38 @@ namespace IT_STEP
             Console.WriteLine("5. Сохранение данных в файл");
         }
 
-        static void ExportToFile(Student student, string path)
+        static void ExportToFile(List<Student> students, string path)
         {
-            try
+            if (string.IsNullOrEmpty(path))
             {
-                using var file = new StreamWriter(path, false);
-                file.WriteLine(
-                    $"{student.FirstName};{student.LastName};{student.DateOfBirth:G};{student.Faculty};{student.NumberOfGroup};{student.AverageMark}");
+                path = "export.csv";
             }
-            catch (UnauthorizedAccessException)
+            foreach (var student in students)
             {
-                Console.WriteLine("Отказано в доступе");
-            }
-            catch (ArgumentException)
-            {
-                Console.WriteLine(
-                    "Параметр path пуст или path содержит имя системного устройства (com1, com2 и т. д.).");
-            }
-            catch (DirectoryNotFoundException)
-            {
-                Console.WriteLine("Указан недопустимый путь (например, он ведет на несопоставленный диск)");
-            }
-            catch (IOException)
-            {
-                Console.WriteLine(
-                    "Параметр path включает неверный или недопустимый синтаксис имени файла, имени каталога или метки тома");
+                try
+                {
+                    using var file = new StreamWriter(path, true);
+                    file.WriteLine(
+                        $"{student.FirstName};{student.LastName};{student.DateOfBirth:G};{student.Faculty};{student.NumberOfGroup};{student.AverageMark}");
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Console.WriteLine("Отказано в доступе");
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine(
+                        "Параметр path пуст или path содержит имя системного устройства (com1, com2 и т. д.).");
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Console.WriteLine("Указан недопустимый путь (например, он ведет на несопоставленный диск)");
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine(
+                        "Параметр path включает неверный или недопустимый синтаксис имени файла, имени каталога или метки тома");
+                }
             }
         }
 
@@ -117,7 +124,7 @@ namespace IT_STEP
                     case '5':
                         Console.Write("Введите имя файла: ");
                         var path = Console.ReadLine();
-                        ExportToFile(student, path);
+                        ExportToFile(students, path);
                         break;
                 }
                 
